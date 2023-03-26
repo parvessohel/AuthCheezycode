@@ -7,6 +7,23 @@ const app = express()
 
 const Port = 5000
 
+app.use(express.json())
+
+app.use("/users",userRouter)
+app.use("/note", noteRouter)
+
+app.use(req, res, next){
+    console.log("HTTP Method - " + req.method + " , URL " + req.url)
+    next()
+}
+
+app.get("/", (req, res) => {
+    res.send("hello")
+})
+
+
+
+
 mongoose.connect("mongodb+srv://pargamerx1264:Noyjonoyjo11@cluster0.l2aopod.mongodb.net/?retryWrites=true&w=majority")
 .then(()=>{
     app.listen(Port, () => {
@@ -17,10 +34,4 @@ mongoose.connect("mongodb+srv://pargamerx1264:Noyjonoyjo11@cluster0.l2aopod.mong
 })
 
 
-app.use("/users",userRouter)
-app.use("/note", noteRouter)
-
-app.get("/", (req, res) => {
-    res.send("hello")
-})
 

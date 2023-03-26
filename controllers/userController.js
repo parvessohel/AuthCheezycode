@@ -1,4 +1,4 @@
-const userModel = require("../models//userModel")
+const userModel = require("../models/userModel")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const SECRET_KEY = "nOTESaPI"
@@ -32,14 +32,32 @@ res.status(201).json({user: result, token: token})
 
 } catch(error) {
     console.log(error)
-    res.status(500).json({message: "Something went wrong"})
+    res.status(500).json({message: "User not found"})
     
 }
 
 }
 
-const signin = (req, res)=>{
-    
+const signin = async(req, res)=>{
+    const {email, password} = req.body
+    try {
+        const exinstingUser = await userModel.findOne({email: email}) 
+    if(!exinstingUser){
+        return res.status(404).json({message: "User already exists"})
+    }
+    const matchedPassword = await bcrypt.compare(password, exinstingUser.password)
+    if(!matchedPassword){
+        return res.status(400).json({message: "Invalid Password"})
+    }
+     
+    const token = jwt.sign({email: exinstingUser.email, id: exinstingUser.id}, SECRET_KEY)
+    res.status(201).json({user: exinstingUser, token: token})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: "User not found"})
+    }
+
 }
 
 module.exports = {signup, signin}
