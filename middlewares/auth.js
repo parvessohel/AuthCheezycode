@@ -11,12 +11,12 @@ const auth = (req, res, next) => {
             req.userId = user.id
         }
         else {
-            return res.status(401).json({ message: "Unauthorized User 1" })
+            return res.status(401).json({ message: "Unauthorized User" })
         }
         next()
     } catch (error) {
         console.log(error)
-        res.status(401).json({ message: "Unauthorized User 2" })
+        res.status(401).json({ message: "Unauthorized User" })
     }
 }
 
